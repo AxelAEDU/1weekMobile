@@ -26,8 +26,8 @@ public class PlayerMovement : MonoBehaviour
         
     }
 
-    private bool IsGrounded()
-    {
-        return Physics.OverlapBox(groundCheck.position, 0.2f, groundLayer);
-    }
+    //private bool IsGrounded()
+    //{
+    //    return Physics.OverlapSphere(groundCheck.position, 0.2f, groundLayer);
+    //}
 }
