@@ -10,25 +10,34 @@ public class PlayerMovement : MonoBehaviour
     private UserPlayer _userPlayer;
 
     //Jumping
-    public float JumpH = 10f;
-    public Transform GroundSpot;
-    private bool IsGrounded = false;
-    private bool Jumping = false;
+    public float maxJumpHeight = 10f;
+    public Transform groundCheck;
+    private bool _isGrounded = false;
+    private bool _isJumping = false;
+    public float fallMultiplier = 1.5f;
+
+    float _initialJumpVelocity;
+    float _maxJumpTime;
 
     //Movment
-    private Vector2 Movements;
+    private Vector2 _movements;
     public float speed = 10f;
-    private bool isFacingRight = true;
+    private bool _isFacingRight = true;
 
     //Sprint
     public float sprintSpeed = 10f;
     public bool isSprinting;
 
+    //Gravity
+    float _gravity = -250f;
+    float _groundGravity = -0.05f;
+
 
 
     //Animator
-    private Animator anim;
+    private Animator _animator;
     private bool _isRunning = false;
+
 
     public void OnEnable()
     {        
@@ -45,12 +54,11 @@ public class PlayerMovement : MonoBehaviour
         _userPlayer = new UserPlayer();
         _userPlayer.Player.SprintStart.performed += x => SprintPressed();
         _userPlayer.Player.SprintDone.performed += x => SprintReleased();
-        Physics.gravity = new Vector3(0, -400f, 0);
     }
     void Start()
     {
         //Getting the Animator
-        anim = gameObject.GetComponentInChildren<Animator>();
+        _animator = gameObject.GetComponentInChildren<Animator>();
         //Getting the Rigidbody
         rB = GetComponent<Rigidbody>();
     }
@@ -58,38 +66,39 @@ public class PlayerMovement : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        //calling on Animation
-        Animation();
         //calling on FacingRightDirection
         FacingRightDirection();
+        //calling on Animation
+        Animation();
+        //calling on Move
+        Movment();
+        //calling on Gravity
+        HandleGravity();
     }
     private void FixedUpdate()
     {
-        //calling on Move
-        Movment();
         //calling on Jump
         Jump();
-        //Sprint();
     }
 
     void Animation()
     {
         //Getting infomation from Animatorn to play running animation
-        _isRunning = (Movements.x > 0.1f || Movements.x < -0.1f) ? true : false;
-        anim.SetBool("isRunning", _isRunning);
+        _isRunning = (_movements.x > 0.1f || _movements.x < -0.1f) ? true : false;
+        _animator.SetBool("isRunning", _isRunning);
 
     }
 
     void FacingRightDirection()
     {
         //Getting infomation on what direction player are moving
-        rB.velocity = new Vector2(Movements.x * speed, rB.velocity.y);
+        rB.velocity = new Vector2(_movements.x * speed, rB.velocity.y);
 
-        if (!isFacingRight && Movements.x > 0f)
+        if (!_isFacingRight && _movements.x > 0f)
         {
             Flip();
         }
-        else if (isFacingRight && Movements.x < 0f)
+        else if (_isFacingRight && _movements.x < 0f)
         {
             Flip();
         }
@@ -98,7 +107,7 @@ public class PlayerMovement : MonoBehaviour
     private void Flip()
     {
         //Rotate the charater in the direction you move
-        isFacingRight = !isFacingRight;
+        _isFacingRight = !_isFacingRight;
         Vector3 localScale = transform.localScale;
         localScale.x *= -1f;
         transform.localScale = localScale;
@@ -107,26 +116,29 @@ public class PlayerMovement : MonoBehaviour
     public void Movment()
     {
         //make the player move
-        Movements = _userPlayer.Player.Move.ReadValue<Vector2>();
+        _movements = _userPlayer.Player.Move.ReadValue<Vector2>();
         
         if (isSprinting)
         {
-            rB.velocity = sprintSpeed * Movements.y * transform.forward + (transform.right * Movements.x) * sprintSpeed;
+            //if Sprint button are pressed then the Sprinting = true
+            rB.velocity = sprintSpeed * _movements.y * transform.forward + (transform.right * _movements.x) * sprintSpeed;
         }
         else
         {
-            rB.velocity = speed * Movements.y * transform.forward + (transform.right * Movements.x) * speed;
+            //if Sprint button are released then the Sprinting = false
+            rB.velocity = speed * _movements.y * transform.forward + (transform.right * _movements.x) * speed;
         }
     }
     private void Jump()
     {
         //Will check if IsGrounded and Jumping are true
-        if (Jumping == true && IsGrounded == true)
+        if (_isJumping == true && _isGrounded == true)
         {
             ////You will jump
-            rB.velocity = new Vector3(0, JumpH, 0);
-            Jumping = false;
+            rB.velocity = new Vector3(rB.velocity.x, maxJumpHeight, 0);
+            _isJumping = false;
         }
+
     }
 
 
@@ -134,18 +146,32 @@ public class PlayerMovement : MonoBehaviour
     public void OnJump(InputAction.CallbackContext context)
     {
         //Will check if IsGrounded = true
-        if (IsGrounded == true)
+        if (context.performed && _isGrounded == true)
         {
             //Will check if Jumping = true
-            Jumping = true;
+            _isJumping = true;
+        }
+    }
+
+    void HandleGravity()
+    {
+        if (_isGrounded)
+        {
+            _movements.y = _groundGravity;
+        }
+        else
+        {
+            _movements.y += _gravity * Time.deltaTime;
         }
     }
     private void SprintPressed()
     {
+        //Making the Sprinting = true
         isSprinting = true;
     }
     private void SprintReleased()
     {
+        //Making the Sprinting = false
         isSprinting = false;
     }
 
@@ -155,7 +181,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             //Checking if its true that you are on the ground
-            IsGrounded = true;
+            _isGrounded = true;
         }
     }
 
@@ -165,7 +191,7 @@ public class PlayerMovement : MonoBehaviour
         if (collision.gameObject.tag == "Ground")
         {
             //Checking if you are not on the ground
-            IsGrounded = false;
+            _isGrounded = false;
         }
     }
 }

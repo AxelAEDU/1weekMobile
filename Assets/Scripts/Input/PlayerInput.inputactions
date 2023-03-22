@@ -1,5 +1,5 @@
 {
-    "name": "UserPlayer",
+    "name": "PlayerInput",
     "maps": [
         {
             "name": "Player",
@@ -15,21 +15,12 @@
                     "initialStateCheck": true
                 },
                 {
-                    "name": "SprintStart",
+                    "name": "Run",
                     "type": "Button",
                     "id": "b9b08782-8a86-48a6-a888-478ce41c414d",
                     "expectedControlType": "Button",
                     "processors": "",
-                    "interactions": "Press",
-                    "initialStateCheck": false
-                },
-                {
-                    "name": "SprintDone",
-                    "type": "Button",
-                    "id": "98746247-4b02-4d1f-a17c-d6176f1e5a1c",
-                    "expectedControlType": "Button",
-                    "processors": "",
-                    "interactions": "Press(behavior=1)",
+                    "interactions": "",
                     "initialStateCheck": false
                 },
                 {
@@ -182,7 +173,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Gamepad",
-                    "action": "SprintStart",
+                    "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -193,7 +184,7 @@
                     "interactions": "",
                     "processors": "",
                     "groups": ";Keyboard&Mouse",
-                    "action": "SprintStart",
+                    "action": "Run",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },
@@ -216,28 +207,6 @@
                     "processors": "",
                     "groups": "Gamepad",
                     "action": "Jump",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "ea08eb2b-9b3a-47a6-a29e-60407e5c7220",
-                    "path": "<Gamepad>/buttonWest",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Gamepad",
-                    "action": "SprintDone",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
-                    "id": "557dabb2-c0c2-4f79-a718-5fa32c8b404d",
-                    "path": "<Keyboard>/shift",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "Keyboard&Mouse",
-                    "action": "SprintDone",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
