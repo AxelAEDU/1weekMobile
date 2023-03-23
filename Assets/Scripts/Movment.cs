@@ -14,6 +14,7 @@ public class Movment : MonoBehaviour
     int isRunningHash;
     int isWalkingHash;
     int isJumpingHash;
+    int isDeadHash;
 
     //variables to store player input values
     Vector2 currentMovementInput;
@@ -57,10 +58,11 @@ public class Movment : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         animator = GetComponentInChildren<Animator>();
 
-        //parameter hash references
+        //parameter animation hash references
         isRunningHash = Animator.StringToHash("isRunning");
         isWalkingHash = Animator.StringToHash("isWalking");
         isJumpingHash = Animator.StringToHash("isJumping");
+        isDeadHash = Animator.StringToHash("isDead");
 
         //player input callbacks
         playerInput.Player.Move.started += OnMovementInput;
@@ -85,6 +87,7 @@ public class Movment : MonoBehaviour
     {
         handleRotation();
         handleAnimation();
+
         if (isRunPressed)
         {
             characterController.Move(currentRunMovement * movementSpeed * Time.deltaTime);
@@ -182,22 +185,23 @@ public class Movment : MonoBehaviour
         bool isRunning = animator.GetBool(isRunningHash);
         bool isWalking = animator.GetBool(isWalkingHash);
 
-        // start movement animation if movement pressed is true and not moveing
+        // start walkmovement animation if movement pressed is true and not moveing
         if(isMovementPressed && !isWalking)
         {
             animator.SetBool(isWalkingHash, true);
         }
-        // stop movement animation if movement pressed is false and not moveing
+        // stop walkmovement animation if movement pressed is false and not moveing
         else if (!isMovementPressed && isWalking)
         {
             animator.SetBool(isWalkingHash, false);
         }
-
-        if((isMovementPressed && isRunPressed) && !isRunning)
+        // start runmovement animation if movement pressed is true and not moveing
+        if ((isMovementPressed && isRunPressed) && !isRunning)
         {
             animator.SetBool(isRunningHash, true);
         }
-        else if((!isMovementPressed || !isRunPressed) && isRunning)
+        // stop runmovement animation if movement pressed is false and not moveing
+        else if ((!isMovementPressed || !isRunPressed) && isRunning)
         {
             animator.SetBool(isRunningHash, false);
         }
@@ -219,5 +223,14 @@ public class Movment : MonoBehaviour
     void OnJump(InputAction.CallbackContext context)
     {
         isJumpPressed = context.ReadValueAsButton();
+    }
+
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.tag == "KillBox")
+        {
+            animator.SetBool(isDeadHash, true);
+            characterController.enabled = false;       
+        }
     }
 }
