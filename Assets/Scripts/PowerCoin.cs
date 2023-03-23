@@ -2,14 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Killbox : MonoBehaviour
+public class PowerCoin : MonoBehaviour
 {
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "Player")
+        if (other.tag == "Head")
         {
-            Debug.Log("die");
-            Destroy(other.gameObject);
+            Debug.Log("coin");
+            //Destroy(other.gameObject);
         }
     }
 }

@@ -10,6 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 262362029}
   - component: {fileID: 262362030}
+  - component: {fileID: 420936766982248172}
   m_Layer: 0
   m_Name: Killbox
   m_TagString: KillBox
@@ -43,8 +44,21 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.44024718, z: 0.37042394}
-  m_Center: {x: 2.8847973e-16, y: 0.3090254, z: -0.08279994}
+  m_Size: {x: 1, y: 0.33129418, z: 0.37947643}
+  m_Center: {x: 2.2415795e-16, y: 0.2545489, z: -0.0782737}
+--- !u!114 &420936766982248172
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 262362028}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68d0b95aed034042b77da8ce05aed44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Endscreen: {fileID: 0}
 --- !u!1 &344717401
 GameObject:
   m_ObjectHideFlags: 0
@@ -55,6 +69,7 @@ GameObject:
   m_Component:
   - component: {fileID: 344717402}
   - component: {fileID: 344717404}
+  - component: {fileID: 1983747182873915827}
   m_Layer: 0
   m_Name: Killbox (1)
   m_TagString: KillBox
@@ -88,8 +103,21 @@ BoxCollider:
   m_IsTrigger: 1
   m_Enabled: 1
   serializedVersion: 2
-  m_Size: {x: 1, y: 0.44024718, z: 0.37042394}
-  m_Center: {x: 2.8847973e-16, y: 0.3090254, z: -0.08279994}
+  m_Size: {x: 1, y: 0.34703407, z: 0.37042394}
+  m_Center: {x: 2.8847973e-16, y: 0.26241887, z: -0.08279994}
+--- !u!114 &1983747182873915827
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 344717401}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a68d0b95aed034042b77da8ce05aed44, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  Endscreen: {fileID: 0}
 --- !u!1 &545682315351394824
 GameObject:
   m_ObjectHideFlags: 0
