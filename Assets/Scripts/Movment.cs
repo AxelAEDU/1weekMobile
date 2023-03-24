@@ -20,6 +20,7 @@ public class Movment : MonoBehaviour
     Vector2 currentMovementInput;
     Vector3 currentMovement;
     Vector3 currentRunMovement;
+    Vector3 appliedMovement;
     float movementSpeed = 5;
     bool isMovementPressed;
     bool isRunPressed;
@@ -34,7 +35,7 @@ public class Movment : MonoBehaviour
     //jumping variables
     bool isJumpPressed = false;
     float initialJumpVelocity;
-    float maxJumpHeight = 2f;
+    float maxJumpHeight = 1f;
     float maxJumpTime = 0.75f;
     bool isJumping = false;
     bool isJumpAnimating = false;
@@ -76,26 +77,24 @@ public class Movment : MonoBehaviour
         setupJumpVariables();
 
     }
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
     // Update is called once per frame
     void Update()
     {
         handleRotation();
         handleAnimation();
-
+        // moving the player
         if (isRunPressed)
         {
-            characterController.Move(currentRunMovement * movementSpeed * Time.deltaTime);
+            appliedMovement.x = currentRunMovement.x;
         }
         else
         {
-            characterController.Move(currentMovement * movementSpeed * Time.deltaTime);
+            appliedMovement.x = currentMovement.x;
         }
+
+        characterController.Move(appliedMovement * movementSpeed * Time.deltaTime);
+
         handleGravity();
         handleJump();
 
@@ -104,6 +103,7 @@ public class Movment : MonoBehaviour
 
     void setupJumpVariables()
     {
+        //handling the jump variables
         float timeToApex = maxJumpTime / 2;
         gravity = (-2 * maxJumpHeight) / Mathf.Pow(timeToApex, 2);
         initialJumpVelocity = (2 * maxJumpHeight) / timeToApex;
@@ -111,14 +111,14 @@ public class Movment : MonoBehaviour
 
     void handleJump()
     {
-
+        // handling the jump mecanic
         if(!isJumping && characterController.isGrounded && isJumpPressed)
         {
             animator.SetBool(isJumpingHash, true);
             isJumpAnimating = true;
             isJumping = true;
-            currentMovement.y = initialJumpVelocity *.5f;
-            currentRunMovement.y = initialJumpVelocity * .5f;
+            currentMovement.y = initialJumpVelocity;
+            appliedMovement.y = initialJumpVelocity;
         }
         else if(!isJumpPressed && isJumping && characterController.isGrounded)
         {
@@ -140,23 +140,21 @@ public class Movment : MonoBehaviour
             }
 
             currentMovement.y = groundGravity;
-            currentRunMovement.y = groundGravity;
+            appliedMovement.y = groundGravity;
         }
+        // additional gravity applied after reaching apex of jump
         else if (isFalling)
         {
             float previousYVelocity = currentMovement.y;
-            float newYVelocity = currentMovement.y + (gravity * fallMultiplier * Time.deltaTime);
-            float nextYVelocity = Mathf.Max ((previousYVelocity + newYVelocity) * .5f,- 20f);
-            currentMovement.y = nextYVelocity;
-            currentRunMovement.y = nextYVelocity;
+            currentMovement.y = currentMovement.y + (gravity * fallMultiplier * Time.deltaTime);
+            appliedMovement.y = Mathf.Max ((previousYVelocity + currentMovement.y) * .5f,- 20f);
         }
+        // when charater is not grounded
         else
         {
             float previousYVelocity = currentMovement.y;
-            float newYVelocity = currentMovement.y + (gravity * Time.deltaTime);
-            float nextYVelocity = (previousYVelocity + newYVelocity) * .5f;
-            currentMovement.y = nextYVelocity;
-            currentRunMovement.y = nextYVelocity;
+            currentMovement.y = currentMovement.y + (gravity * Time.deltaTime);
+            appliedMovement.y = (previousYVelocity + currentMovement.y) * .5f;
         }
     }
 
@@ -227,6 +225,7 @@ public class Movment : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        //plater will get killed if he collied with the TAG killbox
         if (other.tag == "KillBox")
         {
             animator.SetBool(isDeadHash, true);
